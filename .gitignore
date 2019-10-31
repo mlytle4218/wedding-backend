@@ -1,0 +1,13 @@
+# ignore node_modules
+/node_modules
+
+# ignore react project
+/client
+
+# ignore secrets
+.env
+
+#ignore Docker stuff
+
+Dockerfile
+docker-compose.yml
