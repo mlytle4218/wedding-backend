@@ -1,7 +1,8 @@
 'use strict';
 let jwt = require('jsonwebtoken');
 let config = require('../../config');
-let jwt_key = config.secret;
+let jwt_key = process.env.WEDDING_BACKEND_SECRET_KEY;
+// let jwt_key = config.secret;
 let jwt_expiry = config.expiration;
 
 

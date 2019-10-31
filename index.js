@@ -56,4 +56,6 @@ app.listen(port);
 
 console.log('RESTful API server started on: ' + port);
 
+console.log(process.env.WEDDING_BACKEND_SECRET_KEY)
+
 module.exports = app
