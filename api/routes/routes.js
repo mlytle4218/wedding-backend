@@ -10,7 +10,7 @@ var checkForUserBearerToken = function(req, res, next) {
   // console.log('in checkForUserBearerToken')
   // console.log(req.token)
     if (req.token) {
-      jwt.verify(req.token, config.secret, function(error, decoded) {
+      jwt.verify(req.token, process.env.WEDDING_BACKEND_SECRET_KEY, function(error, decoded) {
         if (error) {
           return res.json({ success: false, message: 'Failed to authenticate.' })
         } else {
@@ -30,11 +30,13 @@ var checkForUserBearerToken = function(req, res, next) {
 
 var invitationController = require('../controllers/invitationController');
 var userController = require('../controllers/userController');
+
+
 router.get('/test', invitationController.test);
 
 
-router.post('/user/signIn', userController.sign_in_user);
-router.get('/quickCode/:code', invitationController.rsvp_page)
+router.post('/user/signIn', userController.sign_in_user)
+    .get('/quickCode/:code', invitationController.rsvp_page)
     .post('/invitation/quickCode/',  invitationController.invitation_sign_in);
 
 router.use(bearerToken())

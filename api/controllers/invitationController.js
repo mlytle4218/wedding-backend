@@ -127,7 +127,6 @@ exports.delete_all = function (req, res) {
 
 
 exports.update_a_invitation = function (req, res) {
-  console.log(req.body.songs)
   Invitation.findById(req.params.invitationId, function (error, invitation) {
     if (error) {
       res.send(error)
@@ -186,12 +185,15 @@ exports.rsvp_page = function (req, res) {
 exports.invitation_sign_in = function (req, res) {
   console.log(req.body)
   Invitation.findOne({ quickCode: req.body.code }).exec(function (error, invitation) {
-    if (invitation) {
+    if (error) {
+      console.log('password was null in invitation sign in')
+      res.status(500).send({ "result": false })
+    } else if (invitation != null) {
+      console.log('no error')
       invitation.comparePassword(req.body.password, function (error, isMatch) {
         if (error) {
           res.send(error)
-        }
-        if (isMatch) {
+        }else if (isMatch) {
           res.send({
             "result": isMatch,
             "token": utils.create_web_token({ "email": invitation.quickCode, "admin": false }),
@@ -202,8 +204,7 @@ exports.invitation_sign_in = function (req, res) {
         }
       })
     } else {
-      console.log('password was null in invitation sign in')
-      res.status(500).send({ "result": false })
+      res.status(500).send({"result":"invitation not found"})
     }
   })
 
@@ -229,35 +230,35 @@ function generatePasswordArray(){
 
 function generatePassword(algo){
   let animals = [
-    "Bird",
-    "Cat",
-    "Dog",
-    "Bear",
-    "Squirrel",
-    "Rabbit",
-    "Turtle",
-    "Racoon"
+    "bird",
+    "cat",
+    "dog",
+    "bear",
+    "squirrel",
+    "rabbit",
+    "turtle",
+    "racoon"
   ]
   let accessories = [
-    "BowTie",
-    "TopHat",
-    "Cane",
-    "Necklace",
-    "Bag",
-    "Shoes",
-    "Monicle",
-    "Scarf"
+    "bowtie",
+    "tophat",
+    "cane",
+    "necklace",
+    "bag",
+    "tie",
+    "monicle",
+    "scarf"
   ]
   let colors =[
-    "Black",
-    "Red",
-    "Green",
-    "Blue",
-    "Yellow",
-    "Purple",
-    "Orange",
-    "Brown"
+    "black",
+    "red",
+    "green",
+    "blue",
+    "yellow",
+    "purple",
+    "orange",
+    "brown"
   ]
-  return "A" + colors[algo.color1]+animals[algo.animal]+"WithA"+colors[algo.color2]+accessories[algo.accessory]
+  return "a" + colors[algo.color1]+animals[algo.animal]+"witha"+colors[algo.color2]+accessories[algo.accessory]
 
 }

@@ -45,9 +45,16 @@ invitationSchema.pre("save", function(next) {
 invitationSchema.methods.comparePassword = function(candidatePassword, cb) {
     console.log('comparePassword')
     console.log(candidatePassword)
+    console.log(this.password)
     bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-        if (err) return cb(err);
-        cb(null, isMatch);
+        if (err) { 
+            console.log('is err')
+            console.log(err)
+            return cb(err); 
+        } else {
+            console.log(isMatch)
+            cb(null, isMatch);
+        }
     });
 };
 
