@@ -2,10 +2,13 @@ let express = require('express');
 let mongoose = require('mongoose'); 
 let bodyParser = require('body-parser')
 let cors = require('cors');
+let appRoot = require('app-root-path');
+let winston = require('./api/config/winston');
 require('dotenv').config()
 app = express();
 Invitation = require('./api/models/invitation')
 User = require('./api/models/user')
+var morgan = require('morgan');
 // port = process.env.PORT || 3001;
 // let db = process.env.DB || config.db;
 // let host = process.env.HOST || config.host
@@ -39,6 +42,21 @@ mongoose.connection.on('disconnected', function () {
   console.log('Mongoose default connection disconnected'); 
 });
 
+app.use(morgan('combined', { stream: winston.stream }))
+
+// app.use(function(err, req, res, next) {
+//   // set locals, only providing error in development
+//   res.locals.message = err.message;
+//   res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+//   // add this line to include winston logging
+//   winston.error(`${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+
+//   // render the error page
+//   res.status(err.status || 500);
+//   res.render('error');
+// });
+
 // app.use(cors({origin: "http://localhost:3000/"}))
 app.use(cors())
 
@@ -52,7 +70,7 @@ app.use('/api', routes)
 
 // application -------------------------------------------------------------
 app.get('*', function(req, res) {
-  res.sendFile(process.env.NON_API_LOCATION); // load the single view file (angular will handle the page changes on the front-end)
+  res.sendFile(`${appRoot}/public/index.html`); // load the single view file (angular will handle the page changes on the front-end)
 }); 
 
 app.listen(port);

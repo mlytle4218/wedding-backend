@@ -3,12 +3,9 @@ var express = require('express');
 var router = express.Router();
 var bearerToken = require('express-bearer-token');
 let jwt = require('jsonwebtoken');
-let config = require('../../config');
-console.log('in routes')
+let winston = require('../config/winston')
 
 var checkForUserBearerToken = function(req, res, next) {
-  // console.log('in checkForUserBearerToken')
-  // console.log(req.token)
     if (req.token) {
       jwt.verify(req.token, process.env.WEDDING_BACKEND_SECRET_KEY, function(error, decoded) {
         if (error) {
@@ -19,7 +16,7 @@ var checkForUserBearerToken = function(req, res, next) {
         }
       });
     } else {
-      // console.log(req.body)
+      winston.error('no token')
       return res.status(403).send({
         success: false,
         message: 'No token'
@@ -57,6 +54,8 @@ router.get('/invitation/:invitationId', invitationController.get_a_invitation)
     .put('/invitation/:invitationId', invitationController.update_a_invitation)
     .delete('/invitation/:invitationId', invitationController.delete_a_invitation)
 
-
+router.get('*', (req, res) => {
+  return res.status(501)
+})
 
 module.exports = router;

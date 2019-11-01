@@ -5,11 +5,9 @@ let utils = require('./util')
 
 exports.sign_in_user = async (req, res) => {
     User.findOne({ email: req.body.email}, function (error, user) {
-        // console.log(req.body.email)
         if (error) {
             res.send(error)
         } else if (user != null) {
-            // console.log(req.body)
             user.comparePassword(req.body.password, function(error, isMatch) {
                 if (error) {
                     res.send(error)
@@ -30,7 +28,6 @@ exports.sign_in_user = async (req, res) => {
 }
 
 exports.create_user = function (req, res) {
-    console.log('in user_create')
     var user = new User({
         email: req.body.email,
         password: req.body.password,

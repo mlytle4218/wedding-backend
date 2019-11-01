@@ -2,16 +2,16 @@
 let utils = require('./util')
 let mongoose = require('mongoose');
 let Invitation = mongoose.model('Invitation');
+let winston = require('../config/winston')
 
 
 exports.list_all_invitations = function (req, res) {
   if (req.decoded.admin) {
     Invitation.find({}, function (error, invitation) {
       if (error) {
-        console.log(error)
+        winston.error(error)
         res.send(error);
       } else {
-        // console.log('invitation')
         res.send(invitation)
       }
     });
@@ -58,8 +58,6 @@ exports.printCodes = function( req, res) {
 }
 
 exports.create_a_invitation = function (req, res) {
-  console.log('req.body')
-  console.log(req.body)
   let passwordAlgo = generatePasswordArray()
   var new_invitation = new Invitation({
     email: req.body.email,
@@ -85,12 +83,10 @@ exports.create_a_invitation = function (req, res) {
   if (req.decoded.admin) {
     new_invitation.save(function (error, invitation) {
       if (error) {
-        console.log('in create errro')
-        console.log(error)
+        winston.error(error)
         res.send(error)
       }
       else {
-        console.log(invitation)
         res.send(invitation)
       }
     });
@@ -100,10 +96,9 @@ exports.create_a_invitation = function (req, res) {
 };
 
 exports.get_a_invitation = function (req, res) {
-  console.log(req.params)
   Invitation.findById(req.params.invitationId, function (err, invitation) {
     if (err) {
-      console.log(err)
+      winston.error(err)
       res.send(err);
     } else {
       res.json(invitation);
@@ -113,13 +108,13 @@ exports.get_a_invitation = function (req, res) {
 
 exports.delete_all = function (req, res) {
   if (true) {
-    console.log('dont do that')
+   winston.error('dont do that')
   } else {
     Invitation.deleteMany(function (err, invitation) {
       if (err) {
-        console.log(err)
+        winston.error(err)
       } else {
-        console.log(invitation)
+        winston.info(invitation)
       }
     })
   }
@@ -140,7 +135,7 @@ exports.update_a_invitation = function (req, res) {
         invitation.people = req.body.people
         invitation.save(function (err, inv) {
           if (err) {
-            console.log(err)
+            winston.error(err)
             res.sendStatus(404)
           } else {
             res.json(inv)
@@ -159,9 +154,11 @@ exports.delete_a_invitation = function (req, res) {
     Invitation.deleteOne({
       _id: req.params.invitationId
     }, function (err, invitation) {
-      if (err)
+      if (err) {
         res.send(err);
-      res.json({ message: 'invitation successfully deleted' });
+      } else {
+        res.json({ message: 'invitation successfully deleted' });
+      }
     });
   } else {
     res.sendStatus(401)
@@ -183,13 +180,11 @@ exports.rsvp_page = function (req, res) {
 
 
 exports.invitation_sign_in = function (req, res) {
-  console.log(req.body)
   Invitation.findOne({ quickCode: req.body.code }).exec(function (error, invitation) {
     if (error) {
-      console.log('password was null in invitation sign in')
+      winston.error('password was null in invitation sign in')
       res.status(500).send({ "result": false })
     } else if (invitation != null) {
-      console.log('no error')
       invitation.comparePassword(req.body.password, function (error, isMatch) {
         if (error) {
           res.send(error)
