@@ -8,7 +8,7 @@ exports.sign_in_user = async (req, res) => {
         // console.log(req.body.email)
         if (error) {
             res.send(error)
-        } else{
+        } else if (user != null) {
             // console.log(req.body)
             user.comparePassword(req.body.password, function(error, isMatch) {
                 if (error) {
@@ -23,6 +23,8 @@ exports.sign_in_user = async (req, res) => {
                     res.status(500).send({"result":isMatch})
                 }
             })
+        } else {
+            res.status(500).send({"result":"User not found"})
         }
     })
 }

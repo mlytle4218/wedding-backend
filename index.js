@@ -2,13 +2,16 @@ let express = require('express');
 let mongoose = require('mongoose'); 
 let bodyParser = require('body-parser')
 let cors = require('cors');
+require('dotenv').config()
 app = express();
 Invitation = require('./api/models/invitation')
 User = require('./api/models/user')
-let config = require('./config');
-port = process.env.PORT || 3001;
-let db = process.env.DB || config.db;
-let host = process.env.HOST || config.host
+// port = process.env.PORT || 3001;
+// let db = process.env.DB || config.db;
+// let host = process.env.HOST || config.host
+let port = process.env.PORT;
+let db = process.env.DB;
+let host = process.env.HOST;
 
 
 
@@ -49,7 +52,7 @@ app.use('/api', routes)
 
 // application -------------------------------------------------------------
 app.get('*', function(req, res) {
-  res.sendFile('/home/marc/Desktop/nwedding/public/index.html'); // load the single view file (angular will handle the page changes on the front-end)
+  res.sendFile(process.env.NON_API_LOCATION); // load the single view file (angular will handle the page changes on the front-end)
 }); 
 
 app.listen(port);
