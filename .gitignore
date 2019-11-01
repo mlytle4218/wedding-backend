@@ -11,3 +11,6 @@
 
 Dockerfile
 docker-compose.yml
+
+#ignore logs
+/logs
