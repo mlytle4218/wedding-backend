@@ -5,7 +5,7 @@ let winston = require('winston');
 let options = {
     file: {
       level: 'info',
-      filename: `${appRoot}/api/logs/app.log`,
+      filename: `${appRoot}/api/logs/wedding-back.log`,
       handleExceptions: true,
       json: true,
       maxsize: 5242880, // 5MB
