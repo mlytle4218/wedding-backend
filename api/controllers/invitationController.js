@@ -19,23 +19,23 @@ exports.list_all_invitations = function (req, res) {
     res.sendStatus(401)
   }
 };
-function generatePassword(){
+function generatePassword() {
   return "sercret";
 }
-exports.test = function(req, res) {
+exports.test = function (req, res) {
   res.send('successful')
 }
 
-exports.printCodes = function( req, res) {
+exports.printCodes = function (req, res) {
   let result = []
   Invitation.find({
     '_id': {
       $in: req.body
     }
-  }, function(error, invitations) {
+  }, function (error, invitations) {
     if (error) {
       res.sendStatus(401)
-    } else  {
+    } else {
       invitations.forEach((inv) => {
         let algo = {
           color1: inv.color1,
@@ -76,7 +76,7 @@ exports.create_a_invitation = function (req, res) {
     name: req.body.name,
     songs: req.body.songs,
     color1: passwordAlgo.color1,
-    color2:passwordAlgo.color2,
+    color2: passwordAlgo.color2,
     animal: passwordAlgo.animal,
     accessory: passwordAlgo.accessory
   });
@@ -108,7 +108,7 @@ exports.get_a_invitation = function (req, res) {
 
 exports.delete_all = function (req, res) {
   if (true) {
-   winston.error('dont do that')
+    winston.error('dont do that')
   } else {
     Invitation.deleteMany(function (err, invitation) {
       if (err) {
@@ -122,17 +122,18 @@ exports.delete_all = function (req, res) {
 
 
 exports.update_a_invitation = function (req, res) {
+  console.log(req.body)
   Invitation.findById(req.params.invitationId, function (error, invitation) {
     if (error) {
       res.send(error)
     } else {
       if (req.decoded.admin || req.decoded.email == invitation.quickCode) {
-        invitation.email = req.body.email
-        invitation.songs = req.body.songs
-        invitation.rsvp = req.body.rsvp
-        invitation.rsvpAllowed = req.body.rsvpAllowed
-        invitation.address = req.body.address
-        invitation.people = req.body.people
+        if (req.body.email) { invitation.email = req.body.email }
+        if (req.body.songs) { invitation.songs = req.body.songs }
+        if (req.body.rsvp) { invitation.rsvp = req.body.rsvp }
+        if (req.body.rsvpAllowed) { invitation.rsvpAllowed = req.body.rsvpAllowed }
+        if (req.body.address) { invitation.address = req.body.address }
+        if (req.body.people) { invitation.people = req.body.people }
         invitation.save(function (err, inv) {
           if (err) {
             winston.error(err)
@@ -188,7 +189,7 @@ exports.invitation_sign_in = function (req, res) {
       invitation.comparePassword(req.body.password, function (error, isMatch) {
         if (error) {
           res.send(error)
-        }else if (isMatch) {
+        } else if (isMatch) {
           res.send({
             "result": isMatch,
             "token": utils.create_web_token({ "email": invitation.quickCode, "admin": false }),
@@ -199,7 +200,7 @@ exports.invitation_sign_in = function (req, res) {
         }
       })
     } else {
-      res.status(500).send({"result":"invitation not found"})
+      res.status(500).send({ "result": "invitation not found" })
     }
   })
 
@@ -214,7 +215,7 @@ function generateQuickCode(length) {
   }
   return retVal;
 }
-function generatePasswordArray(){
+function generatePasswordArray() {
   return {
     "color1": Math.floor(Math.random() * 8),
     "color2": Math.floor(Math.random() * 8),
@@ -223,7 +224,7 @@ function generatePasswordArray(){
   }
 }
 
-function generatePassword(algo){
+function generatePassword(algo) {
   let animals = [
     "bird",
     "cat",
@@ -244,7 +245,7 @@ function generatePassword(algo){
     "monicle",
     "scarf"
   ]
-  let colors =[
+  let colors = [
     "black",
     "red",
     "green",
@@ -254,6 +255,6 @@ function generatePassword(algo){
     "orange",
     "brown"
   ]
-  return "a" + colors[algo.color1]+animals[algo.animal]+"witha"+colors[algo.color2]+accessories[algo.accessory]
+  return "a" + colors[algo.color1] + animals[algo.animal] + "witha" + colors[algo.color2] + accessories[algo.accessory]
 
 }

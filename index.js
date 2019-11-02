@@ -1,5 +1,5 @@
 let express = require('express');
-let mongoose = require('mongoose'); 
+let mongoose = require('mongoose');
 let bodyParser = require('body-parser')
 let cors = require('cors');
 let appRoot = require('app-root-path');
@@ -9,9 +9,6 @@ app = express();
 Invitation = require('./api/models/invitation')
 User = require('./api/models/user')
 var morgan = require('morgan');
-// port = process.env.PORT || 3001;
-// let db = process.env.DB || config.db;
-// let host = process.env.HOST || config.host
 let port = process.env.PORT;
 let db = process.env.DB;
 let host = process.env.HOST;
@@ -28,18 +25,18 @@ var mongoDB = `mongodb://${host}/${db}`;
 // var mongoDB = `mongodb://mongo:${db}`;
 mongoose.connect(mongoDB, { useNewUrlParser: true, useFindAndModify: false });
 
-mongoose.connection.on('connected', function () {  
+mongoose.connection.on('connected', function () {
   console.log('Mongoose default connection open to ' + mongoDB);
-}); 
+});
 
 // If the connection throws an error
-mongoose.connection.on('error',function (err) {  
+mongoose.connection.on('error', function (err) {
   console.log('Mongoose default connection error: ' + err);
-}); 
+});
 
 // When the connection is disconnected
-mongoose.connection.on('disconnected', function () {  
-  console.log('Mongoose default connection disconnected'); 
+mongoose.connection.on('disconnected', function () {
+  console.log('Mongoose default connection disconnected');
 });
 
 app.use(morgan('combined', { stream: winston.stream }))
@@ -53,18 +50,27 @@ app.use(bodyParser.json());
 
 var routes = require('./api/routes/routes');
 // routes(app)
-app.use('/api', routes) 
+app.use('/api', routes)
+console.log(process.env.NODE_ENV)
 
 // application -------------------------------------------------------------
-app.get('*', function(req, res) {
-  winston.error('wildcard')
-  res.sendFile(`${appRoot}/public/index.html`); // load the single view file (angular will handle the page changes on the front-end)
-}); 
+if (process.env.NODE_ENV == 'development') {
+  app.get('*', function (req, res) {
+    res.sendFile(`${appRoot}/public/index.html`); // load the single view file (angular will handle the page changes on the front-end)
+  });
+}
+if (process.env.NODE_ENV == 'production') {
+
+  app.use(express.static('client/build'));
+  app.get('*', (req, res) => {
+    res.sendFile(require('path').resolve(__dirname, 'client', 'build', 'index.html'))
+  })
+}
+
 
 app.listen(port);
 
 console.log('RESTful API server started on: ' + port);
 
-// console.log(process.env.WEDDING_BACKEND_SECRET_KEY)
 
 module.exports = app
