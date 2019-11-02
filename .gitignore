@@ -13,4 +13,4 @@ Dockerfile
 docker-compose.yml
 
 #ignore logs
-/logs
+/api/logs
