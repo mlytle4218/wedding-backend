@@ -59,6 +59,11 @@ if (process.env.NODE_ENV == 'development') {
     res.sendFile(`${appRoot}/public/index.html`); // load the single view file (angular will handle the page changes on the front-end)
   });
 }
+if (process.env.NODE_ENV == 'maintenance') {
+  app.get('*', function (req, res) {
+    res.sendFile(`${appRoot}/public/index.html`); // load the single view file (angular will handle the page changes on the front-end)
+  });
+}
 if (process.env.NODE_ENV == 'production') {
 
   app.use(express.static('client/build'));
