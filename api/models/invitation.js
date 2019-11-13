@@ -27,10 +27,9 @@ var invitationSchema = new Schema({
             "name": {type:String, required: false}
         }
     ],
-    color1: {type: Number, required: false},
-    color2: {type: Number, required: false},
-    animal: {type: Number, required: false},
-    accessory: {type: Number, required: false}
+    color: {type: Number, required: false},
+    size: {type: Number, required: false},
+    animal: {type: Number, required: false}
 
 })
 

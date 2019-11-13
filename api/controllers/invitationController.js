@@ -19,9 +19,9 @@ exports.list_all_invitations = function (req, res) {
     res.sendStatus(401)
   }
 };
-function generatePassword() {
-  return "sercret";
-}
+// function generatePassword() {
+//   return "sercret";
+// }
 exports.test = function (req, res) {
   res.send('successful')
 }
@@ -37,11 +37,11 @@ exports.printCodes = function (req, res) {
       res.sendStatus(401)
     } else {
       invitations.forEach((inv) => {
+        console.log(inv)
         let algo = {
-          color1: inv.color1,
-          color2: inv.color2,
-          animal: inv.animal,
-          accessory: inv.accessory
+          color: inv.color,
+          size: inv.size,
+          animal: inv.animal
         }
         let temp = {
           people: inv.people,
@@ -63,7 +63,7 @@ exports.create_a_invitation = function (req, res) {
     email: req.body.email,
     password: generatePassword(passwordAlgo),
     permissionLevel: req.body.permissionLevel,
-    quickCode: generateQuickCode(12),
+    quickCode: generateQuickCode(8),
     rsvp: req.body.rsvp,
     rsvpAllowed: req.body.rsvpAllowed,
     address: req.body.address,
@@ -75,10 +75,9 @@ exports.create_a_invitation = function (req, res) {
     people: req.body.people,
     name: req.body.name,
     songs: req.body.songs,
-    color1: passwordAlgo.color1,
-    color2: passwordAlgo.color2,
-    animal: passwordAlgo.animal,
-    accessory: passwordAlgo.accessory
+    color: passwordAlgo.color,
+    size: passwordAlgo.size,
+    animal: passwordAlgo.animal
   });
   if (req.decoded.admin) {
     new_invitation.save(function (error, invitation) {
@@ -217,14 +216,17 @@ function generateQuickCode(length) {
 }
 function generatePasswordArray() {
   return {
-    "color1": Math.floor(Math.random() * 8),
-    "color2": Math.floor(Math.random() * 8),
-    "animal": Math.floor(Math.random() * 8),
-    "accessory": Math.floor(Math.random() * 8)
+    "size": Math.floor(Math.random() * 2),
+    "color": Math.floor(Math.random() * 8),
+    "animal": Math.floor(Math.random() * 8)
   }
 }
 
 function generatePassword(algo) {
+  let sizes = [
+    "small",
+    "large"
+  ]
   let animals = [
     "bird",
     "cat",
@@ -233,17 +235,11 @@ function generatePassword(algo) {
     "squirrel",
     "rabbit",
     "turtle",
-    "racoon"
-  ]
-  let accessories = [
-    "bowtie",
-    "tophat",
-    "cane",
-    "necklace",
-    "bag",
-    "tie",
-    "monicle",
-    "scarf"
+    "racoon",
+    "horse",
+    "bat",
+    "monkey",
+    "sloth"
   ]
   let colors = [
     "black",
@@ -255,6 +251,5 @@ function generatePassword(algo) {
     "orange",
     "brown"
   ]
-  return "a" + colors[algo.color1] + animals[algo.animal] + "witha" + colors[algo.color2] + accessories[algo.accessory]
-
+  return "a" + sizes[algo.size] + colors[algo.color] + animals[algo.animal]
 }
