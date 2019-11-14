@@ -121,7 +121,10 @@ exports.delete_all = function (req, res) {
 
 
 exports.update_a_invitation = function (req, res) {
+  console.log('req.body')
   console.log(req.body)
+  console.log('req.body')
+
   Invitation.findById(req.params.invitationId, function (error, invitation) {
     if (error) {
       res.send(error)
@@ -129,7 +132,9 @@ exports.update_a_invitation = function (req, res) {
       if (req.decoded.admin || req.decoded.email == invitation.quickCode) {
         if (req.body.email) { invitation.email = req.body.email }
         if (req.body.songs) { invitation.songs = req.body.songs }
-        if (req.body.rsvp) { invitation.rsvp = req.body.rsvp }
+        if (typeof req.body.rsvp != 'undefined') { 
+          invitation.rsvp = req.body.rsvp
+         }
         if (req.body.rsvpAllowed) { invitation.rsvpAllowed = req.body.rsvpAllowed }
         if (req.body.address) { invitation.address = req.body.address }
         if (req.body.people) { invitation.people = req.body.people }
