@@ -121,16 +121,15 @@ exports.delete_all = function (req, res) {
 
 
 exports.update_a_invitation = function (req, res) {
-  console.log('req.body')
-  console.log(req.body)
-  console.log('req.body')
-
   Invitation.findById(req.params.invitationId, function (error, invitation) {
     if (error) {
       res.send(error)
     } else {
       if (req.decoded.admin || req.decoded.email == invitation.quickCode) {
-        if (req.body.email) { invitation.email = req.body.email }
+        if (req.body.hasOwnProperty('email')){ 
+          console.log(req.body.email)
+          invitation.email = req.body.email
+         }
         if (req.body.songs) { invitation.songs = req.body.songs }
         if (typeof req.body.rsvp != 'undefined') { 
           invitation.rsvp = req.body.rsvp
