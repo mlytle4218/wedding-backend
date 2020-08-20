@@ -13,7 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "app-root-path": "^3.0.0",
-    "bcrypt": "^3.0.6",
+    "bcrypt": "^5.0.0",
     "body-parser": "1.7.0",
     "concurrently": "^4.1.2",
     "cors": "^2.8.5",
